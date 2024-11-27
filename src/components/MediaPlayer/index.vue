@@ -68,14 +68,18 @@ onMounted(async () => {
   height: 100vh;
   position: relative;
   overflow: hidden;
+  background: black;
 }
 
 .slide-container {
   position: relative;
-  width: 800px;
-  height: 600px;
+  width: 80%;
+  max-height: 600px;
+  max-width: 800px;
+  aspect-ratio: 4/3;
   overflow: hidden;
-  border: 1px solid blue;
+  border: 2px solid cyan;
+  border-radius: 10px;
 }
 
 .slide-container :deep(.loader) {
