@@ -39,11 +39,20 @@ const { setNextSlide, getPlaylist } = mediaPlayerStore;
 const isAnimating = ref(false);
 
 const startSlideshow = () => {
-  if (!playlist.value.length) return;
+  const startTime = performance.now();
+  const slideDuration = (currentSlide.value?.duration ?? 0) * ONE_SECOND;
+  const animationDuration = TRANSFORM_DURATION * ONE_SECOND;
+  const totalDuration = slideDuration + animationDuration;
 
-  setTimeout(() => {
-    isAnimating.value = true;
-  }, (currentSlide.value?.duration ?? 0) * ONE_SECOND + TRANSFORM_DURATION * ONE_SECOND);
+  const loop = (time: number) => {
+    if (time - startTime >= totalDuration) {
+      isAnimating.value = true;
+      return;
+    }
+    requestAnimationFrame(loop);
+  };
+
+  requestAnimationFrame(loop);
 };
 
 const onCurrentSlideEnd = (event: TransitionEvent) => {
@@ -55,7 +64,7 @@ const onCurrentSlideEnd = (event: TransitionEvent) => {
 
 onMounted(async () => {
   await getPlaylist();
-  startSlideshow();
+  if (playlist.value.length) startSlideshow();
 });
 </script>
 
